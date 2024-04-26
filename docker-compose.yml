@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api/src:/usr/src/app/src
+    environment:
+      - NODE_ENV=development
+
+  admin-page:
+    build: ./admin-page
+    ports:
+      - "8081:80"
+    depends_on:
+      - api
+
+  client-page:
+    build: ./client-page
+    ports:
+      - "8082:80"
+    depends_on:
+      - api
