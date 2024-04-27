@@ -99,8 +99,8 @@ export default defineComponent({
 
 
     // Получаем данные и шаблон
-    const { data: templateData } = useSWRV<TemplateData>('http://localhost:3000/api/template', fetcher);
-    const { data: responseData } = useSWRV<ApiResponse>('http://localhost:3000/api/data', fetcher);
+    const { data: templateData, error: templateError } = useSWRV<TemplateData>('http://localhost:3000/api/template', fetcher);
+    const { data: responseData, error: responseError  } = useSWRV<ApiResponse>('http://localhost:3000/api/data', fetcher);
 
     const fetchTemplateData = computed(() => {
       return {
@@ -116,8 +116,11 @@ export default defineComponent({
     }, { immediate: true });
 
     const customTemplate = computed(() => {
+      // Ошибка сервера
+      if (templateError.value || responseError.value) return '<h1>Data Error...</h1>';
+
       // Loader, пока загружаются данные
-      if (!responseData.value || !fetchTemplateData.value) return '<h1>Loading...</h1>';
+      if (!responseData.value || !fetchTemplateData.value) return '<h1>Loading Data...</h1>';
 
       // Подставляем стили и шаблон, добавив в них переменные
       const styles = `<style>${fetchTemplateData.value.css || defaultCSS}</style>`;

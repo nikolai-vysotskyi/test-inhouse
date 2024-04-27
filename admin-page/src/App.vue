@@ -2,14 +2,14 @@
   <div id="app">
     <h1 class="title">Админский Интерфейс</h1>
     <div class="wrapper">
-      <div class="admin-section" v-if="loaded">
+      <div class="admin-section">
         <TemplateEditor
             :html="html"
             :css="css"
             @update:input="updatePreview"
         />
       </div>
-      <div class="preview-section" v-if="loaded">
+      <div class="preview-section">
         <DynamicComponent :customHtml="html" :customCss="css" />
       </div>
     </div>
@@ -17,11 +17,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent,defineAsyncComponent, ref, watch } from 'vue';
 import TemplateEditor from './components/TemplateEditor.vue';
-import DynamicComponent from './components/DynamicComponent.vue';
 import useSWRV from 'swrv';
 import axios, {AxiosResponse} from "axios";
+
+const DynamicComponent = defineAsyncComponent({
+  loader: () => import('./components/DynamicComponent.vue'),
+  loadingComponent:  () => import('./components/LoadingComponent.vue'),
+  errorComponent: () => import('./components/ErrorComponent.vue'),
+  delay: 200,
+  timeout: 5000,
+});
 
 interface TemplateData {
   html: string;
@@ -47,17 +54,16 @@ export default defineComponent({
       html.value = newHTML;
       css.value = newCSS;
     };
-    const loaded = ref(false);
+
     watch(initialData, (newData) => {
       if(newData) {
         html.value = newData.html;
         css.value = newData.css;
-        loaded.value = true;
       }
     }, {
       immediate: true
     });
-    return { html, css, updatePreview, loaded };
+    return { html, css, updatePreview };
   }
 });
 </script>

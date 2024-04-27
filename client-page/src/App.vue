@@ -6,8 +6,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import DynamicComponent from './components/DynamicComponent.vue';
+import { defineComponent, defineAsyncComponent } from 'vue';
+
+const DynamicComponent = defineAsyncComponent({
+  loader: () => import('./components/DynamicComponent.vue'),
+  loadingComponent:  () => import('./components/LoadingComponent.vue'),
+  errorComponent: () => import('./components/ErrorComponent.vue'),
+  delay: 200,
+  timeout: 5000,
+});
 
 export default defineComponent({
   name: 'App',
