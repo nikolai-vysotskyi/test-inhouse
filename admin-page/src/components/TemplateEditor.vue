@@ -99,9 +99,17 @@ export default defineComponent({
   font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
   font-size: 14px;
   line-height: 1.5;
-  padding: 16px 0;
+  padding: 16px 16px 16px 0;
   margin-bottom: 16px;
   border-radius: 8px;
+}
+
+.prism-editor__container {
+  height: 192px;
+}
+
+.prism-editor__textarea{
+  height: 192px;
 }
 
 .prism-editor__textarea:focus {
@@ -116,5 +124,6 @@ export default defineComponent({
   color: #ffffff;
   border-radius: 4px;
   border: 0;
+  cursor: pointer;
 }
 </style>
