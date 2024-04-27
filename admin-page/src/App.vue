@@ -2,7 +2,7 @@
   <div id="app">
     <h1 class="title">Админский Интерфейс</h1>
     <div class="wrapper">
-      <div class="admin-section">
+      <div class="admin-section" v-if="loaded">
         <TemplateEditor
             :html="html"
             :css="css"
@@ -49,21 +49,26 @@ export default defineComponent({
     function fetcher<T>(url: string): Promise<T> {
       return axios.get<T, AxiosResponse<T>>(url).then(res => res.data);
     }
-    const { data: initialData } = useSWRV<TemplateData>('http://localhost:3000/api/template', fetcher);
+    const { data: initialData, error: initialError } = useSWRV<TemplateData>('http://localhost:3000/api/template', fetcher);
     const updatePreview = ({html: newHTML, css: newCSS}: {html: string, css: string}) => {
       html.value = newHTML;
       css.value = newCSS;
     };
-
-    watch(initialData, (newData) => {
+    const loaded = ref(false);
+    watch([initialData, initialError], ([newData, newError]) => {
       if(newData) {
         html.value = newData.html;
         css.value = newData.css;
+        loaded.value = true;
+      } else if (newError) {
+        html.value = '';
+        css.value = '';
+        loaded.value = true;
       }
     }, {
       immediate: true
     });
-    return { html, css, updatePreview };
+    return { html, css, updatePreview, loaded };
   }
 });
 </script>

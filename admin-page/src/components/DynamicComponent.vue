@@ -123,7 +123,7 @@ export default defineComponent({
       if (!responseData.value || !fetchTemplateData.value) return '<h1>Loading Data...</h1>';
 
       // Подставляем стили и шаблон, добавив в них переменные
-      const styles = `<style>${fetchTemplateData.value.css || defaultCSS}</style>`;
+      const styles = `<style scoped>${fetchTemplateData.value.css || defaultCSS}</style>`;
       return styles + (fetchTemplateData.value.html || defaultTemplate)
           .replace('{{ title }}', responseData.value.title)
           .replace('{{ image }}', responseData.value.image)
@@ -134,3 +134,4 @@ export default defineComponent({
   }
 });
 </script>
+
